@@ -5,7 +5,12 @@ X city built a new stadium, each day many people visit it and the stats are save
 Please write a query to display the records which have 3 or more consecutive rows and the amount of people more than 100(inclusive).
 */
 /* Write your PL/SQL query statement below */
+--Solution1
+/* Write your PL/SQL query statement below */
+select id, visit_date, people from (select id, visit_date, people, count(*) over (partition by diff) as cnt from (
+select id, visit_date, people, (id-rnk) as diff from (select id, TO_CHAR(visit_date,'yyyy-mm-dd') as visit_date, people, row_number() over (order by visit_date) as rnk from stadium where people>=100))) where cnt>=3  order by id;
 
+--Solution2
 with t as 
 (select * from stadium where people>=100)
 select id, TO_CHAR(visit_date,'YYYY-MM-DD') as visit_date, people from t t4 where t4.id in (select t1.id from t t1, t t2, t t3 where
