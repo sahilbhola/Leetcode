@@ -1,0 +1,15 @@
+--https://leetcode.com/problems/exchange-seats/
+/* Write your PL/SQL query statement below */
+/*select s.id, case when s.id=oe.oid then oe.estudent else oe.ostudent end as student
+from seat s left join (
+select odd.id as oid, even.id as eid, odd.student as ostudent, case when even.student is null then odd.student else even.student end as estudent from
+(select id, student, row_number() over (order by id) rn from seat where mod(id,2)=0) even
+right join
+(select id, student, row_number() over (order by id) rn from seat where mod(id,2)=1) odd
+on even.rn=odd.rn) oe on s.id=oe.oid or s.id=oe.eid
+;*/
+select 
+case when mod(id,2)=0 then id-1 
+when mod(id,2) = 1 and id!=counts.cnt then id+1
+else id end as id, student from seat, (select count(*) as cnt from seat) counts
+order by id;
